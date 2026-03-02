@@ -15,14 +15,14 @@
 
     <!-- ==================== HEADER ==================== -->
     <header class="bg-white border-bottom sticky-top">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white py-2">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-1">
             <div class="container">
                 <!-- Logo -->
                 <a href="index.php" class="navbar-brand">
                     <img src="images/logo.png" alt="Closet Logo" height="50">
                 </a>
 
-                <!-- Mobile toggle + icons -->
+                <!-- Mobile Profile + Cart -->
                 <div class="d-flex align-items-center gap-3 d-lg-none">
                     <a href="#" class="text-dark"><i class="bi bi-person fs-5"></i></a>
                     <a href="#" class="text-dark position-relative">
@@ -35,8 +35,8 @@
                 </div>
 
                 <div class="collapse navbar-collapse" id="mainNav">
-                    <!-- Nav links -->
-                    <ul class="navbar-nav me-auto gap-lg-3">
+                    <!-- Nav links -->  
+                    <ul class="navbar-nav me-auto gap-lg-4">
                         <li class="nav-item"><a class="nav-link active fw-semibold" href="#">Home</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link fw-semibold dropdown-toggle" href="#" data-bs-toggle="dropdown">Products</a>
@@ -62,7 +62,7 @@
                         </div>
                     </form>
 
-                    <!-- Icons (desktop only) -->
+                    <!-- Desktop Profile + Cart -->
                     <div class="d-none d-lg-flex align-items-center gap-3 ms-2">
                         <a href="#" class="text-dark"><i class="bi bi-person fs-5"></i></a>
                         <a href="#" class="text-dark position-relative">

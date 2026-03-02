@@ -6,8 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    This is the example HTML page.
-    <p .hehe>This is paragraph</p>
-
+    This is the test page 
+    
 </body>
 </html>
