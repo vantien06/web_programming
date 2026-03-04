@@ -1,3 +1,6 @@
+<?php
+require_once __DIR__ . '/../config/database.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,11 +44,11 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link fw-semibold dropdown-toggle" href="#" data-bs-toggle="dropdown">Products</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">T-Shirts</a></li>
-                                <li><a class="dropdown-item" href="#">Jeans</a></li>
-                                <li><a class="dropdown-item" href="#">Jackets</a></li>
-                                <li><a class="dropdown-item" href="#">Dresses</a></li>
-                                <li><a class="dropdown-item" href="#">Accessories</a></li>
+                                <?php
+                                $catStmt = $pdo->query("SELECT name, slug FROM categories ORDER BY name");
+                                while ($cat = $catStmt->fetch()): ?>
+                                    <li><a class="dropdown-item" href="#"><?= htmlspecialchars($cat['name']) ?></a></li>
+                                <?php endwhile; ?>
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link fw-semibold" href="#new-arrivals">New Arrivals</a></li>
@@ -96,23 +99,23 @@
                 <h2 class="text-center mb-4">Featured Products</h2>
                 <div class="row g-4">
                     <?php
-                    $products = [
-                        ['name' => 'Classic White Tee',     'price' => 29.99,  'img' => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400'],
-                        ['name' => 'Slim Fit Jeans',        'price' => 59.99,  'img' => 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400'],
-                        ['name' => 'Leather Jacket',        'price' => 149.99, 'img' => 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400'],
-                        ['name' => 'Summer Floral Dress',   'price' => 45.99,  'img' => 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400'],
-                        ['name' => 'Casual Hoodie',         'price' => 39.99,  'img' => 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400'],
-                        ['name' => 'Denim Shorts',          'price' => 34.99,  'img' => 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400'],
-                        ['name' => 'Wool Overcoat',         'price' => 189.99, 'img' => 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=400'],
-                    ];
+                    // Featured: top-rated products across all categories
+                    $stmt = $pdo->query("SELECT p.*, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id ORDER BY p.rating DESC, p.create_at DESC LIMIT 8");
+                    $products = $stmt->fetchAll();
                     foreach ($products as $p): ?>
                         <div class="col-6 col-md-4 col-lg-3">
                             <div class="card h-100 product-card border-0 shadow-sm">
-                                <img src="<?= $p['img'] ?>" class="card-img-top" alt="<?= $p['name'] ?>"
+                                <img src="<?= htmlspecialchars($p['image_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['name']) ?>"
                                     style="height: 260px; object-fit: cover;">
                                 <div class="card-body text-center">
-                                    <h6 class="card-title mb-1"><?= $p['name'] ?></h6>
+                                    <h6 class="card-title mb-1"><?= htmlspecialchars($p['name']) ?></h6>
+                                    <span class="badge bg-secondary mb-1"><?= htmlspecialchars($p['category_name']) ?></span>
                                     <p class="text-muted mb-2">$<?= number_format($p['price'], 2) ?></p>
+                                    <div class="mb-2">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="bi bi-star<?= $i <= $p['rating'] ? '-fill text-warning' : '' ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
                                     <a href="#" class="btn btn-outline-dark btn-sm">Add to Cart</a>
                                 </div>
                             </div>
@@ -128,22 +131,20 @@
                 <h2 class="text-center mb-4">New Arrivals</h2>
                 <div class="row g-4">
                     <?php
-                    $newArrivals = [
-                        ['name' => 'Oversized Blazer',  'price' => 89.99,  'img' => 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400'],
-                        ['name' => 'Cargo Pants',       'price' => 54.99,  'img' => 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400'],
-                        ['name' => 'Knit Sweater',      'price' => 49.99,  'img' => 'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=400'],
-                        ['name' => 'Linen Shirt',       'price' => 42.99,  'img' => 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400'],
-                    ];
+                    // New Arrivals: most recently added products
+                    $stmt = $pdo->query("SELECT p.*, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id ORDER BY p.create_at DESC LIMIT 4");
+                    $newArrivals = $stmt->fetchAll();
                     foreach ($newArrivals as $p): ?>
                         <div class="col-6 col-md-3">
                             <div class="card h-100 product-card border-0 shadow-sm">
                                 <div class="position-relative">
-                                    <img src="<?= $p['img'] ?>" class="card-img-top" alt="<?= $p['name'] ?>"
+                                    <img src="<?= htmlspecialchars($p['image_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['name']) ?>"
                                         style="height: 280px; object-fit: cover;">
                                     <span class="badge bg-success position-absolute top-0 start-0 m-2">New</span>
                                 </div>
                                 <div class="card-body text-center">
-                                    <h6 class="card-title mb-1"><?= $p['name'] ?></h6>
+                                    <h6 class="card-title mb-1"><?= htmlspecialchars($p['name']) ?></h6>
+                                    <span class="badge bg-secondary mb-1"><?= htmlspecialchars($p['category_name']) ?></span>
                                     <p class="text-muted mb-2">$<?= number_format($p['price'], 2) ?></p>
                                     <a href="#" class="btn btn-dark btn-sm">Add to Cart</a>
                                 </div>
